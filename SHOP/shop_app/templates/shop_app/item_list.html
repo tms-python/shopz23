@@ -17,4 +17,28 @@
   <a href="{% url 'shop_app:item_create' %}">
     Создать продукт
   </a>
+
+  <script>
+    axios_instance.get('{% url "shop_app:department-list" %}').then(response=>{
+      console.log(response.data)
+    })
+  </script>
+
+  <script>
+  new Vue({
+    el: '#app',
+    delimiters: ['[[', ']]'],
+    components: {
+
+    },
+    data: function () {
+      return {
+
+      }
+    },
+    methods: {
+
+    }
+  })
+</script>
 {% endblock %}

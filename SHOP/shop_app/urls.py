@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
     index,
     ItemListView,
@@ -17,4 +17,5 @@ urlpatterns = [
     path('item_create/', ItemCreate.as_view(), name='item_create'),
     path('item_update/<int:pk>/', ItemUpdate.as_view(), name='item_update'),
     path('item_delete/<int:pk>/', ItemDelete.as_view(), name='item_delete'),
+    path('api/', include('shop_app.api.urls')),
 ]

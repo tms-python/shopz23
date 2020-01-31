@@ -26,36 +26,10 @@ def index(request):
     return render(request, 'shop_app/base.html', context={})
 
 
-# if request.method == 'GET':
-#     student_form = StudentForm()
-#     return render(
-#         request,
-#         'my_app/create_student.html',
-#         context={'student_form': student_form}
-#     )
-# elif request.method == 'POST':
-#     student_form = StudentForm(request.POST)
-#     if student_form.is_valid():
-#         student_form.save(commit=True)
-#         return HttpResponseRedirect(
-#             reverse('my_app:get_all_students')
-#         )
-
-class MyView(View):
-    def post(self, request, *args, **kwargs):
-        pass
-
-    def get(self, request, *args, **kwargs):
-        pass
-
-
 class ItemListView(ListView):
     template_name = 'shop_app/item_list.html'
     model = Item
     context_object_name = 'item_list'
-
-    # def get(self, request, *args, **kwargs):
-    #     return super(ItemListView, self).get(request, *args, **kwargs)
 
 
 class ItemCreate(CreateView):

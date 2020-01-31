@@ -46,6 +46,17 @@ class Department(models.Model):
         on_delete=models.DO_NOTHING,
         verbose_name='Магазин'
     )
+    is_delete = models.BooleanField(
+        default=False,
+        verbose_name='Удалено'
+    )
+
+    def delete(self, using=None, keep_parents=False):
+        self.is_delete = True
+        self.save()
+
+    def save(self, *agrs, **kwargs):
+        return super(Department, self).save(*agrs, **kwargs)
 
     def __str__(self):
         return f'{self.get_sphere_display()} {self.shop}'
