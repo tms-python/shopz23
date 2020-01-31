@@ -26,11 +26,20 @@
   </div>
 
   <div id="app" class="col-lg-12">
-    <ul>
-      <li v-for="department in department_list">
-        [[ department ]]
+    <ul class="list-group">
+      <li class="list-group-item"
+          v-for="department, index in department_list">
+        <span>[[ department.sphere_name]]</span>
+        <button
+            class="btn btn-danger"
+            @click.prevent="delete_department(index)">
+
+          del
+        </button>
       </li>
     </ul>
+
+
   </div>
 
   <script>
@@ -50,13 +59,29 @@
             id: 2,
             shop: 1,
             sphere: "2",
+            sphere_name: "sphere_name",
             staff_amount: 0
           }
         ]
       }
     },
     methods: {
-
+      get_department_list: function () {
+        axios_instance.get('{% url "shop_app:department-list" %}').then(response=>{
+          this.department_list = response.data
+        })
+      },
+      delete_department: function (index) {
+        let element_id = this.department_list[index].id;
+        axios_instance.delete(`api/department/${element_id}`).then(response=>{
+          if (response.status === 204){
+            this.department_list.splice(index, 1)
+          }
+        })
+      }
+    },
+    mounted: function () {
+      this.get_department_list()
     }
   })
 </script>

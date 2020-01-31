@@ -6,6 +6,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register('department', views.DepartmentViewSet)
+router.register('item', views.ItemViewSet)
 
 
 urlpatterns = [

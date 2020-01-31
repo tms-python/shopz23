@@ -2,11 +2,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from .serializers import (
-    DepartmentSerializer
+    DepartmentSerializer,
+    ItemSerializer
 )
 
 from ..models import (
-    Department
+    Department,
+    Item
 )
 
 
@@ -29,3 +31,9 @@ class DepartmentViewSet(ModelViewSet):
     # def create(self, request, *args, **kwargs):    #  создание сущности объекта
     # def update(self, request, *args, **kwargs):    #  обновление объекта
     # def destroy(self, request, *args, **kwargs):   #  удаление объекта
+
+
+class ItemViewSet(ModelViewSet):
+    queryset = Item.objects.all()
+    # queryset = Department.objects.all()
+    serializer_class = ItemSerializer
