@@ -8,20 +8,23 @@
           enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit">
-        {% if form.instance.id %}
-          Обновить
-        {% else %}
-          Сохранить
-        {% endif %}
-      </button>
+      <p>
+        <button type="submit">
+          {% if form.instance.id %}
+            Обновить
+          {% else %}
+            Сохранить
+          {% endif %}
+        </button>
+      </p>
     </form>
-
     {% if form.instance.id %}
       <a href="{% url 'shop_app:item_delete' form.instance.id %}">
         Удалить
       </a>
     {% endif %}
-
+  <script type="application/javascript">
+    bootstrap_form('#item_form')
+  </script>
   </div>
 {% endblock %}

@@ -4,19 +4,34 @@
 {% endblock %}
 
 {% block body %}
-  <a href="{% url 'shop_app:index' %}">На главную</a>
-  <ul>
-    {% for item in item_list %}
-      <li>
-        <a href="{% url 'shop_app:item_update' item.id %}">
-          {{ forloop.counter }} {{ item }}
-        </a>
+  <div class="col-lg-12 text-center">
+    <a href="{% url 'shop_app:index' %}">На главную</a>
+  </div>
+
+  <div class="col-lg-12 mt-2 ">
+    <ul class="list-group">
+      {% for item in item_list %}
+        <li class="list-group-item">
+          <a href="{% url 'shop_app:item_update' item.id %}">
+            {{ forloop.counter }} {{ item }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="col-lg-12 mt-2 text-center ">
+    <a class="btn btn-info form-control" href="{% url 'shop_app:item_create' %}">
+      Создать продукт
+    </a>
+  </div>
+
+  <div id="app" class="col-lg-12">
+    <ul>
+      <li v-for="department in department_list">
+        [[ department ]]
       </li>
-    {% endfor %}
-  </ul>
-  <a href="{% url 'shop_app:item_create' %}">
-    Создать продукт
-  </a>
+    </ul>
+  </div>
 
   <script>
     axios_instance.get('{% url "shop_app:department-list" %}').then(response=>{
@@ -28,12 +43,16 @@
   new Vue({
     el: '#app',
     delimiters: ['[[', ']]'],
-    components: {
-
-    },
     data: function () {
       return {
-
+        department_list: [
+          {
+            id: 2,
+            shop: 1,
+            sphere: "2",
+            staff_amount: 0
+          }
+        ]
       }
     },
     methods: {

@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +28,12 @@
   </script>
   <div class="container">
     <div class="row">
+      <div class="col-lg-6 offset-3">
+        <img src="{% static 'shop_app/image/download.jpeg' %}"
+             style="max-width: 300px">
+      </div>
+    </div>
+    <div class="row">
     {% block body %}
       <!-- some context-->
       <div class="col-lg-12">
@@ -34,6 +42,6 @@
     {% endblock %}
     </div>
   </div>
-
+  <script src="{% static 'shop_app/js/django_form.js' %}"></script>
 </body>
 </html>
