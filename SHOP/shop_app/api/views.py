@@ -3,12 +3,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from .serializers import (
     DepartmentSerializer,
-    ItemSerializer
+    ItemSerializer,
+    ShopSerializer
 )
 
 from ..models import (
     Department,
-    Item
+    Item,
+    Shop
 )
 
 
@@ -37,3 +39,9 @@ class ItemViewSet(ModelViewSet):
     queryset = Item.objects.all()
     # queryset = Department.objects.all()
     serializer_class = ItemSerializer
+
+
+class ShopViewSet(ModelViewSet):
+    queryset = Shop.objects.all()
+    # queryset = Department.objects.all()
+    serializer_class = ShopSerializer

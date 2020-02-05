@@ -31,6 +31,13 @@ class ItemListView(ListView):
     model = Item
     context_object_name = 'item_list'
 
+    def get_queryset(self):
+        # return Item.objects.filter()
+        return Item.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        return super(ItemListView, self).get(request, *args, **kwargs)
+
 
 class ItemCreate(CreateView):
     template_name = 'shop_app/item_create.html'

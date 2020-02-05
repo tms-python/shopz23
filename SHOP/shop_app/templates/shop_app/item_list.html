@@ -12,7 +12,7 @@
     <ul class="list-group">
       {% for item in item_list %}
         <li class="list-group-item">
-          <a href="{% url 'shop_app:item_update' item.id %}">
+          <a class="my_class" href="{% url 'shop_app:item_update' item.id %}">
             {{ forloop.counter }} {{ item }}
           </a>
         </li>
@@ -26,20 +26,46 @@
   </div>
 
   <div id="app" class="col-lg-12">
-    <ul class="list-group">
-      <li class="list-group-item"
-          v-for="department, index in department_list">
-        <span>[[ department.sphere_name]]</span>
-        <button
-            class="btn btn-danger"
-            @click.prevent="delete_department(index)">
+    <div>
+      <ul class="list-group">
+        <li class="list-group-item"
+            v-for="department, index in department_list">
+          <span>[[ department.sphere_name]]</span>
+          <button
+              class="btn btn-danger my_class"
+              @click.prevent="delete_department(index)">
+            del
+          </button>
+        </li>
+      </ul>
+    </div>
 
-          del
-        </button>
-      </li>
-    </ul>
+    <div class="row">
+      <div class="col-lg-12 mt-3">
 
+        <label for="sphere">Сфера</label>
+        <select id="sphere" class="form-control"
+                v-model="department_object.sphere">
+          <option v-for="sphere in sphere_list" :value="sphere.id">
+            [[sphere.name]]
+          </option>
+        </select>
 
+        <label for="staff_amount">Количество сотрудников</label>
+        <input id="staff_amount"
+               class="form-control"
+               type="number" v-model="department_object.staff_amount">
+
+        <label for="shop">Магазин</label>
+        <select id="shop" class="form-control"
+                v-model="department_object.shop">
+          <option
+              v-for="shop in shop_list" :value="shop.id">
+            [[shop.name]]
+          </option>
+        </select>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -55,19 +81,25 @@
     data: function () {
       return {
         department_list: [
-          {
-            id: 2,
-            shop: 1,
-            sphere: "2",
-            sphere_name: "sphere_name",
-            staff_amount: 0
-          }
-        ]
+          {}
+        ],
+        sphere_list: [
+          {id: '1', name: 'Продукты'},
+          {id: '2', name: 'Игрушки'},
+          {id: '3', name: 'Одежда'},
+        ],
+        shop_list: [],
+        department_object: {
+          id: null,
+          sphere: '',
+          staff_amount: 0,
+          shop: null
+        }
       }
     },
     methods: {
       get_department_list: function () {
-        axios_instance.get('{% url "shop_app:department-list" %}').then(response=>{
+        axios_instance.get('api/department/').then(response=>{
           this.department_list = response.data
         })
       },
@@ -78,11 +110,27 @@
             this.department_list.splice(index, 1)
           }
         })
-      }
+      },
+      get_shop_list: function () {
+        axios_instance.get('api/shop/').then(response=>{
+          this.shop_list = response.data
+        })
+      },
     },
     mounted: function () {
-      this.get_department_list()
+      this.get_department_list();
+      this.get_shop_list()
     }
   })
 </script>
+<style>
+  button {
+    background-color: chocolate;
+  }
+  .my_class {
+    background-color: chocolate;
+    border: black;
+  }
+</style>
 {% endblock %}
+
