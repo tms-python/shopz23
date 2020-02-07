@@ -30,7 +30,7 @@
       <ul class="list-group">
         <li class="list-group-item"
             v-for="department, index in department_list">
-          <span>[[ department.sphere_name]]</span>
+          <span @click.prevent="insert_data_to_department_object(index)" style="cursor: pointer">[[ department.sphere_name]]</span>
           <button
               class="btn btn-danger my_class"
               @click.prevent="delete_department(index)">
@@ -64,6 +64,17 @@
             [[shop.name]]
           </option>
         </select>
+
+        <button class="btn btn-info"
+                v-if="department_object.id === null"
+                @click.prevent="save_department()">
+          Save
+        </button>
+        <button class="btn btn-info"
+                v-else-if="department_object.id !== null"
+                @click.prevent="update_department()">
+          Update
+        </button>
       </div>
     </div>
   </div>
@@ -75,6 +86,12 @@
   </script>
 
   <script>
+  let template_department_object = {
+    id: null,
+    sphere: '',
+    staff_amount: 0,
+    shop: null
+  };
   new Vue({
     el: '#app',
     delimiters: ['[[', ']]'],
@@ -89,18 +106,49 @@
           {id: '3', name: 'Одежда'},
         ],
         shop_list: [],
-        department_object: {
-          id: null,
-          sphere: '',
-          staff_amount: 0,
-          shop: null
-        }
+        department_object: this.copy_department(),
       }
     },
     methods: {
       get_department_list: function () {
         axios_instance.get('api/department/').then(response=>{
           this.department_list = response.data
+        })
+      },
+      copy_department: function (department_object) {
+        let department = {};
+        if (department_object === undefined){
+          department_object = template_department_object
+        }
+        for (let key in department_object){
+          department[key] = department_object[key]
+        }
+        return department
+      },
+      save_department: function(){
+        axios_instance.post('api/department/', this.department_object).then(response=>{
+          if (response.status === 201){
+            console.log(response.data);
+            this.department_list.push(response.data);
+            this.department_object = this.copy_department()
+          } else {
+            alert('Все плохо')
+          }
+        }).catch(()=>{alert('Все плохо')})
+      },
+      get_element_index_by_object_id: function(object_id, object_list){
+        for (let index = 0; index < object_list.length; index++){
+          if (object_list[index].id === object_id){
+            return index
+          }
+        }
+      },
+      update_department: function(){
+        let department_object_id = this.department_object.id;
+        axios_instance.put(`api/department/${department_object_id}/`, this.department_object).then(response=>{
+          let object_index = this.get_element_index_by_object_id(department_object_id, this.department_list);
+          this.department_list[object_index] = response.data;
+          this.department_object = this.copy_department()
         })
       },
       delete_department: function (index) {
@@ -110,6 +158,9 @@
             this.department_list.splice(index, 1)
           }
         })
+      },
+      insert_data_to_department_object: function(index){
+        this.department_object = this.copy_department(this.department_list[index])
       },
       get_shop_list: function () {
         axios_instance.get('api/shop/').then(response=>{
