@@ -29,6 +29,8 @@ class DepartmentViewSet(ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+
+
     # def retrieve(self, request, *args, **kwargs):  #  получение отдельной объект
     # def create(self, request, *args, **kwargs):    #  создание сущности объекта
     # def update(self, request, *args, **kwargs):    #  обновление объекта

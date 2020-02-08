@@ -1,0 +1,30 @@
+{% extends 'shop_app/base.html' %}
+{% load static %}
+{% block title %}
+  Страница авторизации
+{% endblock %}
+{% block body %}
+  <script src="{% static 'shop_app/js/django_form.js' %}"></script>
+    <div class="col-lg-4 offset-4">
+      {% if form.errors %}
+          <p>Пароль или логин не верны</p>
+      {% endif %}
+      <form id="login_form" method="post"
+            action="{% url 'users_app:login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p><button id="sub_btn" name="submit">Вход</button></p>
+
+ <!-- данное поле обязательно для стандартного LoginView. В value содержится
+       ссылка на страницу, куда будем перенаправлены, после успешной авторизации -->
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+      </form>
+    </div>
+  <script type="text/javascript">
+    bootstrap_form('#login_form');
+    document.getElementById('sub_btn').setAttribute('class','btn btn-info form-control mt-2');
+    let lbls = document.getElementsByTagName('label');
+    lbls[0].innerText = 'Имя пользователя';
+    lbls[1].innerText = 'Пароль';
+  </script>
+{% endblock %}

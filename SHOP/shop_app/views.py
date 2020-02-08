@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -9,7 +10,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
     View,
-)
+    TemplateView)
 
 from .models import (
     Item,
@@ -24,6 +25,11 @@ from .forms import (
 
 def index(request):
     return render(request, 'shop_app/base.html', context={})
+
+
+class IndexView(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('users_app:login')
+    template_name = 'shop_app/base.html'
 
 
 class ItemListView(ListView):
