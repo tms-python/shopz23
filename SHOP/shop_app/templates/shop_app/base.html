@@ -63,7 +63,9 @@
                 <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
               </li>
 
-              <li class="nav-item">
+            </ul>
+            <ul class="navbar-nav mr-left">
+              <li class="nav-item left">
                 <a class="nav-link " href="{% url 'users_app:logout' %}"
                    tabindex="-1" aria-disabled="true">Logout</a>
               </li>
@@ -71,12 +73,12 @@
           </div>
         </nav>
 
-        {% if user.is_authenticated %}
-          <div class="col-lg-6 offset-3">
-            <img src="{% static 'shop_app/image/download.jpeg' %}"
-                 style="max-width: 300px">
-          </div>
-        {% endif %}
+{#        {% if user.is_authenticated %}#}
+{#          <div class="col-lg-6 offset-3">#}
+{#            <img src="{% static 'shop_app/image/download.jpeg' %}"#}
+{#                 style="max-width: 300px">#}
+{#          </div>#}
+{#        {% endif %}#}
       </div>
     </div>
     <div class="row">

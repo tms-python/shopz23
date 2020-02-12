@@ -10,7 +10,9 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
     View,
-    TemplateView)
+    TemplateView,
+    DetailView,
+)
 
 from .models import (
     Item,
@@ -36,10 +38,14 @@ class ItemListView(ListView):
     template_name = 'shop_app/item_list.html'
     model = Item
     context_object_name = 'item_list'
+    paginate_by = 12
 
     def get_queryset(self):
         # return Item.objects.filter()
-        return Item.objects.all()
+        return Item.objects.select_related('department__shop', 'department')
+
+    def get_paginate_by(self, queryset):
+        return super(ItemListView, self).get_paginate_by(self.get_queryset())
 
     def get(self, request, *args, **kwargs):
         return super(ItemListView, self).get(request, *args, **kwargs)
@@ -49,6 +55,15 @@ class ItemCreate(CreateView):
     template_name = 'shop_app/item_create.html'
     model = Item
     form_class = ItemForm
+
+
+class ItemDetail(DetailView):
+    model = Item
+    template_name = 'shop_app/item_detail.html'
+    context_object_name = 'item'
+
+    def get_queryset(self):
+        return Item.objects.select_related('department', 'department__shop')
 
 
 class ItemUpdate(UpdateView):

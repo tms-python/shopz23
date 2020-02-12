@@ -1,4 +1,5 @@
 {% extends 'shop_app/base.html' %}
+{% load static %}
 {% block title %}
   Список товаров
 {% endblock %}
@@ -8,180 +9,84 @@
     <a href="{% url 'shop_app:index' %}">На главную</a>
   </div>
 
-  <div class="col-lg-12 mt-2 ">
-    <ul class="list-group">
-      {% for item in item_list %}
-        <li class="list-group-item">
-          <a class="my_class" href="{% url 'shop_app:item_update' item.id %}">
-            {{ forloop.counter }} {{ item }}
+  {% for item in item_list %}
+    <div class="card col-lg-4" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">
+          <a href="{% url 'shop_app:item_detail' item.id %}">
+            {{ item.name }}
           </a>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+        </h5>
+        <p class="card-text">
+          <p>
+            Магазин {{ item.department.shop.name }}
+          </p>
+          {% if item.image %}
+            <p>
+              <img src="{{ item.image.url }}" style="max-width: 10rem">
+            </p>
+          {% else %}
+            <p >
+              Изображение отсутствует
+            </p>
+          {% endif %}
+
+          <p>
+            Цена: {{ item.price }}
+          </p>
+        </p>
+      </div>
+    </div>
+  {% endfor %}
+  {% if paginator.num_pages > 1 %}
+
+      <div class="col-lg-12">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            {% if page_obj.number > 1 %}
+              <li class="page-item"><a class="page-link" href="{{ request.path }}?page=1">&lt;&lt;</a></li>
+            {% endif %}
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="{{ request.path }}?page={{ page_obj.previous_page_number }}">
+                  &lt;
+                </a>
+              </li>
+            {% endif %}
+
+            {% for pn in paginator.page_range %}
+              {% if page_obj.number != pn %}
+
+                <li class="page-item">
+                  <a class="page-link" href="{{ request.path }}?page={{ pn }}">
+                    {{ pn }}
+                  </a>
+                </li>
+                {% else %}
+                <li class="page-item page-item active"><a class="page-link" href="#">{{ pn }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="{{ request.path }}?page={{ page_obj.next_page_number }}">
+                  &gt;
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="{{ request.path }}?page={{ page_obj.paginator.num_pages }}">
+                  &gt;&gt;
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+{% endif %}
   <div class="col-lg-12 mt-2 text-center ">
     <a class="btn btn-info form-control" href="{% url 'shop_app:item_create' %}">
       Создать продукт
     </a>
   </div>
-
-  <div id="app" class="col-lg-12">
-    <div>
-      <ul class="list-group">
-        <li class="list-group-item"
-            v-for="department, index in department_list">
-          <span @click.prevent="insert_data_to_department_object(index)" style="cursor: pointer">[[ department.sphere_name]]</span>
-          <button
-              class="btn btn-danger my_class"
-              @click.prevent="delete_department(index)">
-            del
-          </button>
-        </li>
-      </ul>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-12 mt-3">
-
-        <label for="sphere">Сфера</label>
-        <select id="sphere" class="form-control"
-                v-model="department_object.sphere">
-          <option v-for="sphere in sphere_list" :value="sphere.id">
-            [[sphere.name]]
-          </option>
-        </select>
-
-        <label for="staff_amount">Количество сотрудников</label>
-        <input id="staff_amount"
-               class="form-control"
-               type="number" v-model="department_object.staff_amount">
-
-        <label for="shop">Магазин</label>
-        <select id="shop" class="form-control"
-                v-model="department_object.shop">
-          <option
-              v-for="shop in shop_list" :value="shop.id">
-            [[shop.name]]
-          </option>
-        </select>
-
-        <button class="btn btn-info"
-                v-if="department_object.id === null"
-                @click.prevent="save_department()">
-          Save
-        </button>
-        <button class="btn btn-info"
-                v-else-if="department_object.id !== null"
-                @click.prevent="update_department()">
-          Update
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    axios_instance.get('{% url "shop_app:department-list" %}').then(response=>{
-      console.log(response.data)
-    })
-  </script>
-
-  <script>
-  let template_department_object = {
-    id: null,
-    sphere: '',
-    staff_amount: 0,
-    shop: null
-  };
-  new Vue({
-    el: '#app',
-    delimiters: ['[[', ']]'],
-    data: function () {
-      return {
-        department_list: [
-          {}
-        ],
-        sphere_list: [
-          {id: '1', name: 'Продукты'},
-          {id: '2', name: 'Игрушки'},
-          {id: '3', name: 'Одежда'},
-        ],
-        shop_list: [],
-        department_object: this.copy_department(),
-      }
-    },
-    methods: {
-      get_department_list: function () {
-        axios_instance.get('api/department/').then(response=>{
-          this.department_list = response.data
-        })
-      },
-      copy_department: function (department_object) {
-        let department = {};
-        if (department_object === undefined){
-          department_object = template_department_object
-        }
-        for (let key in department_object){
-          department[key] = department_object[key]
-        }
-        return department
-      },
-      save_department: function(){
-        axios_instance.post('api/department/', this.department_object).then(response=>{
-          if (response.status === 201){
-            console.log(response.data);
-            this.department_list.push(response.data);
-            this.department_object = this.copy_department()
-          } else {
-            alert('Все плохо')
-          }
-        }).catch(()=>{alert('Все плохо')})
-      },
-      get_element_index_by_object_id: function(object_id, object_list){
-        for (let index = 0; index < object_list.length; index++){
-          if (object_list[index].id === object_id){
-            return index
-          }
-        }
-      },
-      update_department: function(){
-        let department_object_id = this.department_object.id;
-        axios_instance.put(`api/department/${department_object_id}/`, this.department_object).then(response=>{
-          let object_index = this.get_element_index_by_object_id(department_object_id, this.department_list);
-          this.department_list[object_index] = response.data;
-          this.department_object = this.copy_department()
-        })
-      },
-      delete_department: function (index) {
-        let element_id = this.department_list[index].id;
-        axios_instance.delete(`api/department/${element_id}`).then(response=>{
-          if (response.status === 204){
-            this.department_list.splice(index, 1)
-          }
-        })
-      },
-      insert_data_to_department_object: function(index){
-        this.department_object = this.copy_department(this.department_list[index])
-      },
-      get_shop_list: function () {
-        axios_instance.get('api/shop/').then(response=>{
-          this.shop_list = response.data
-        })
-      },
-    },
-    mounted: function () {
-      this.get_department_list();
-      this.get_shop_list()
-    }
-  })
-</script>
-<style>
-  button {
-    background-color: chocolate;
-  }
-  .my_class {
-    background-color: chocolate;
-    border: black;
-  }
-</style>
 {% endblock %}
 

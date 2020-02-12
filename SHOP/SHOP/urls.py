@@ -18,9 +18,11 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+import debug_toolbar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('__debug__/', include(debug_toolbar.urls)),
     url(r'^api-auth/', include('rest_framework.urls')),
     path('', include('shop_app.urls', namespace='shop_app')),
     path('user/', include('users_app.urls', namespace='users_app')),
