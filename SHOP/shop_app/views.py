@@ -42,10 +42,16 @@ class ItemListView(ListView):
 
     def get_queryset(self):
         # return Item.objects.filter()
-        return Item.objects.select_related('department__shop', 'department')
+        return Item.objects.select_related('department', 'department__shop')
+        # return Item.objects.all()
 
     def get_paginate_by(self, queryset):
-        return super(ItemListView, self).get_paginate_by(self.get_queryset())
+        page_number = self.request.GET.get('page_number')
+        if page_number is not None:
+            self.paginate_by = page_number
+        return super(ItemListView, self).get_paginate_by(
+            self.get_queryset()
+        )
 
     def get(self, request, *args, **kwargs):
         return super(ItemListView, self).get(request, *args, **kwargs)

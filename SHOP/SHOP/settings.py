@@ -25,7 +25,7 @@ SECRET_KEY = 'fnycz6)&1aw5unwz9-_c+847=-fs73#!(qmofww*7t$9bno58^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 LOGIN_REDIRECT_URL = '/'
 
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'shop_app',
     'users_app',
 ]
+
+# CSRF_COOKIE_NAME = 'blablabla_token'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

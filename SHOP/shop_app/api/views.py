@@ -1,6 +1,10 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+# from rest_framework.permissions import
+
 from .serializers import (
     DepartmentSerializer,
     ItemSerializer,
@@ -18,6 +22,7 @@ class DepartmentViewSet(ModelViewSet):
     queryset = Department.objects.filter(is_delete=False)
     # queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
+    # permission_classes =
 
     def list(self, request, *args, **kwargs):
         print('HI i am list method')
@@ -41,6 +46,16 @@ class ItemViewSet(ModelViewSet):
     queryset = Item.objects.all()
     # queryset = Department.objects.all()
     serializer_class = ItemSerializer
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        print(request)
+        return super(ItemViewSet, self).dispatch(request, *args, **kwargs)
+
+
+    def create(self, request, *args, **kwargs):
+        print(request.POST)
+        return super(ItemViewSet, self).create(request, *args, **kwargs)
 
 
 class ShopViewSet(ModelViewSet):

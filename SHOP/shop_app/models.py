@@ -102,14 +102,15 @@ class Item(models.Model):
         except:
             pass
         super(Item, self).save(*args, **kwargs)
-        image = Image.open(self.image.path)
-        max_size = max(image.size[0], image.size[1])
-        multiplier = max_size / 1200
-        image = image.resize((round(image.size[0] / multiplier), round(image.size[1] / multiplier)), Image.ANTIALIAS)
-        image.save(self.image.path)
-        print(image.size)
+        if self.image:
+            image = Image.open(self.image.path)
+            max_size = max(image.size[0], image.size[1])
+            multiplier = max_size / 1200
+            image = image.resize((round(image.size[0] / multiplier), round(image.size[1] / multiplier)), Image.ANTIALIAS)
+            image.save(self.image.path)
+            print(image.size)
 
-        image.save(self.image.path)
+            image.save(self.image.path)
 
     def delete(self, *args, **kwargs):
         self.image.delete(save=False)

@@ -7,5 +7,6 @@ class ShopAppConfig(AppConfig):
 
     def ready(self):
         from .signals import change_shop_staff_amount
+        # self.get_model('Department')
         Department = self.get_model('Department')
         post_save.connect(change_shop_staff_amount, sender=Department)
