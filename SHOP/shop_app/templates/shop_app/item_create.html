@@ -18,6 +18,11 @@
         </button>
       </p>
     </form>
+    {% if form.instance.image %}
+      <div>
+        <img src="{{ form.instance.image.url }}">
+      </div>
+    {% endif %}
     {% if form.instance.id %}
       <a href="{% url 'shop_app:item_delete' form.instance.id %}">
         Удалить

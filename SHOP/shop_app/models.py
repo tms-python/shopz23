@@ -102,6 +102,7 @@ class Item(models.Model):
         except:
             pass
         super(Item, self).save(*args, **kwargs)
+        print(self.image)
         if self.image:
             image = Image.open(self.image.path)
             max_size = max(image.size[0], image.size[1])
