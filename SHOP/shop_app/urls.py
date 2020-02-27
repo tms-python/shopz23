@@ -7,6 +7,7 @@ from .views import (
     ItemUpdate,
     ItemDelete,
     IndexView,
+    CreateDepartmentAndItem
 )
 
 
@@ -20,5 +21,6 @@ urlpatterns = [
     path('item_detail/<int:pk>/', ItemDetail.as_view(), name='item_detail'),
     path('item_update/<int:pk>/', ItemUpdate.as_view(), name='item_update'),
     path('item_delete/<int:pk>/', ItemDelete.as_view(), name='item_delete'),
+    path('item_and_department_create/', CreateDepartmentAndItem.as_view(), name='item_and_department_create'),
     path('api/', include('shop_app.api.urls')),
 ]

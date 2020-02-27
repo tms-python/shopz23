@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
+from django.template.response import TemplateResponse
 from django.urls import reverse_lazy, reverse
 from django.views.generic import (
     ListView,
@@ -22,6 +23,8 @@ from .models import (
 
 from .forms import (
     ItemForm,
+    DepartmentForm,
+    ItemWithoutDepartmentForm
 )
 
 
@@ -55,6 +58,30 @@ class ItemListView(ListView):
 
     def get(self, request, *args, **kwargs):
         return super(ItemListView, self).get(request, *args, **kwargs)
+
+
+#  Реализация View когда у нас две формы
+class CreateDepartmentAndItem(View):
+    def get(self, request, *args, **kwargs):
+        department_form = DepartmentForm()
+        item_form = ItemWithoutDepartmentForm()
+        context = {'department_form': department_form, 'item_form': item_form}
+        return TemplateResponse(request, 'shop_app/department_and_item_create.html', context=context)
+
+    def post(self, request, *args, **kwargs):
+        department_form = DepartmentForm(data=request.POST)
+        item_form = ItemWithoutDepartmentForm(request.POST)
+        if not department_form.is_valid():
+            context = {'department_form': department_form, 'item_form': item_form}
+            return TemplateResponse(request, 'shop_app/department_and_item_create.html', context=context)
+        if not item_form.is_valid():
+            context = {'department_form': department_form, 'item_form': item_form}
+            return TemplateResponse(request, 'shop_app/department_and_item_create.html', context=context)
+        department = department_form.save(commit=True)
+        item = item_form.save(commit=False)
+        item.department = department
+        item.save()
+        return HttpResponseRedirect(reverse('shop_app:item_list'))
 
 
 class ItemCreate(CreateView):

@@ -28,6 +28,7 @@ class TestAuth(TestCase):
         response = self.client.get('/user/login/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.text_on_login_page)
+        self.assertGreater()
 
     def testAuth(self):
         response = self.client.post(
